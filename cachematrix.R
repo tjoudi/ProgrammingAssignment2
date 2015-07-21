@@ -8,17 +8,29 @@
 #4.  get the value of the solved matrix
 
 makeCacheMatrix <- function(x = matrix()) {
+  # empty cache
   m <- NULL
+  
   setMatrix <- function(y) {
     x <<- y
+    # empty cache
     m <<- NULL
   }
+  
   getMatrix <- function() {x}
+  
   setSolvedMatrix <- function(solved_matrix) {m <<- solved_matrix}
+  
   getSolvedMatrix<- function() {m}
-  list(setMatrix = setMatrix, getMatrix = getMatrix,
-       setSolvedMatrix = setSolvedMatrix,
-       getSolvedMatrix = getSolvedMatrix)
+  
+  # create the list that contains the setters and the getters
+  # for both original matrix and the cached solved matrix
+  list(
+      setMatrix = setMatrix
+       , getMatrix = getMatrix
+       , setSolvedMatrix = setSolvedMatrix
+       , getSolvedMatrix = getSolvedMatrix
+      )
   
 
 }
@@ -33,14 +45,20 @@ makeCacheMatrix <- function(x = matrix()) {
 ## 'makeCacheMatrix' is always inversable
 
 cacheSolve <- function(x, ...) {
-  m <- x$getSolvedMatrix()
-  if(!is.null(m)) {
+  
+  solved_m <- x$getSolvedMatrix()
+  
+  if(!is.null(solved_m)) {
     message("getting cached data")
-    return(m)
+    return(solved_m)
   }
+  
   message("Solving matrix")
-  data <- x$getMatrix()
-  m <- solve(data, ...)
-  x$setSolvedMatrix(m)
-  m
+  original_m <- x$getMatrix()
+  solved_m <- solve(original_m, ...)
+  
+  # cache the solved matrix
+  x$setSolvedMatrix(solved_m)
+  # return the solved matrix
+  solved_m
 }
